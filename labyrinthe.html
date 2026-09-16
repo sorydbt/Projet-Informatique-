@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mon Labyrinthe</title>
+<style>
+  body {
+    text-align: center;
+    font-family: Arial;
+    background-color: lightblue;
+  }
+  table {
+    margin: 20px auto;
+    border-collapse: collapse;
+  }
+  td {
+    width: 40px;
+    height: 40px;
+    border: 1px solid black;
+  }
+  .mur {
+    background-color: black;
+  }
+  .chemin {
+    background-color: white;
+  }
+  .sortie {
+    background-color: green;
+  }
+  .joueur {
+    background-color: yellow;
+    border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+
+<h1>Labyrinthe de Diabaté Sory et Bakaga Barack</h1>
+<p>Utilise les flèches du clavier pour te déplacer !</p>
+
+<table id="tableau"></table>
+<p id="message"></p>
+
+<script>
+
+
+// 1 = mur, 0 = chemin, 2 = sortie
+var plan = [
+  [1,1,1,1,1,1],
+  [1,0,0,0,0,1],
+  [1,0,1,1,0,1],
+  [1,0,0,1,0,1],
+  [1,1,0,0,0,1],
+  [1,1,1,1,2,1]
+];
+
+
+var joueurX = 1;
+var joueurY = 1;
+
+
+function dessiner() {
+  var tableau = document.getElementById("tableau");
+  tableau.innerHTML = ""; // on efface avant de redessiner
+
+  for (var ligne = 0; ligne < plan.length; ligne++) {
+    var nouvelleLigne = document.createElement("tr");
+
+    for (var colonne = 0; colonne < plan[ligne].length; colonne++) {
+      var case_ = document.createElement("td");
+
+      if (ligne == joueurY && colonne == joueurX) {
+        case_.className = "joueur";
+      } else if (plan[ligne][colonne] == 1) {
+        case_.className = "mur";
+      } else if (plan[ligne][colonne] == 2) {
+        case_.className = "sortie";
+      } else {
+        case_.className = "chemin";
+      }
+
+      nouvelleLigne.appendChild(case_);
+    }
+
+    tableau.appendChild(nouvelleLigne);
+  }
+}
+
+
+function deplacer(dx, dy) {
+  var nouvelleX = joueurX + dx;
+  var nouvelleY = joueurY + dy;
+
+  
+  if (plan[nouvelleY][nouvelleX] != 1) {
+    joueurX = nouvelleX;
+    joueurY = nouvelleY;
+  }
+
+  
+  if (plan[joueurY][joueurX] == 2) {
+    document.getElementById("message").innerHTML = "Bravo, tu as gagné !";
+  }
+
+  dessiner();
+}
+
+
+document.addEventListener("keydown", function(evenement) {
+  if (evenement.key == "ArrowUp") {
+    deplacer(0, -1);
+  }
+  if (evenement.key == "ArrowDown") {
+    deplacer(0, 1);
+  }
+  if (evenement.key == "ArrowLeft") {
+    deplacer(-1, 0);
+  }
+  if (evenement.key == "ArrowRight") {
+    deplacer(1, 0);
+  }
+});
+
+
+dessiner();
+
+</script>
+
+</body>
+</html>
